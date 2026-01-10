@@ -11,7 +11,8 @@ export const LoginPage = () => {
   const { fetchExpenses } = useExpenses();
   const { login } = useAuth();
 
-  const [isLogin, setIsLogin] = useState(true); // Toggle state
+  const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
@@ -24,6 +25,7 @@ export const LoginPage = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const endpoint = isLogin ? "/auth/login" : "/auth/register";
       const response = await api.post(endpoint, formData);
@@ -62,18 +64,30 @@ export const LoginPage = () => {
       }
 
       alert(message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+      {/* Logo */}
+      <div className="flex justify-center mb-10">
+        <span className="text-5xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 to-blue-900 bg-clip-text text-transparent font-['Cabin']">
+          Cash
+        </span>
+        <span className="text-5xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent font-['Cabin']">
+          Flow
+        </span>
+      </div>
+
       <div className="w-full max-w-md bg-white rounded-[2.5rem] shadow-xl overflow-hidden p-8 md:p-12">
         {/* Toggle Switch */}
         <div className="flex bg-gray-100 p-1 rounded-full mb-10 w-64 mx-auto">
           <button
             type="button"
             onClick={() => setIsLogin(true)}
-            className={`flex-1 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+            className={`flex-1 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
               isLogin
                 ? "bg-white text-gray-900 shadow-sm"
                 : "text-gray-500 hover:text-gray-700"
@@ -84,7 +98,7 @@ export const LoginPage = () => {
           <button
             type="button"
             onClick={() => setIsLogin(false)}
-            className={`flex-1 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
+            className={`flex-1 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 cursor-pointer ${
               !isLogin
                 ? "bg-white text-gray-900 shadow-sm"
                 : "text-gray-500 hover:text-gray-700"
@@ -95,11 +109,13 @@ export const LoginPage = () => {
         </div>
 
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            {isLogin ? "Sign In" : "Sign Up"}
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            {isLogin ? "Welcome Back" : "Create Account"}
           </h2>
           <p className="text-gray-500 text-sm">
-            {isLogin ? "Use your username account" : "Create a new account"}
+            {isLogin
+              ? "Enter your credentials to access your account"
+              : "Sign up to start tracking your expenses"}
           </p>
         </div>
 
@@ -165,8 +181,13 @@ export const LoginPage = () => {
             </div>
           )}
 
-          <Button type="submit" fullWidth>
-            {isLogin ? "Sign In" : "Sign Up"}
+          <Button
+            type="submit"
+            fullWidth
+            disabled={isLoading}
+            className="cursor-pointer"
+          >
+            {isLoading ? "Processing..." : isLogin ? "Sign In" : "Sign Up"}
           </Button>
         </form>
       </div>

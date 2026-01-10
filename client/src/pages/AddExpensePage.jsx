@@ -150,10 +150,10 @@ export const AddExpensePage = () => {
                         {currentMonth}
                       </h3>
                       <div className="flex gap-1">
-                        <button className="p-1 hover:bg-gray-200 rounded-lg text-gray-400">
+                        <button className="p-1 hover:bg-gray-200 rounded-lg text-gray-400 cursor-pointer">
                           <ChevronLeft size={18} />
                         </button>
-                        <button className="p-1 hover:bg-gray-200 rounded-lg text-gray-400">
+                        <button className="p-1 hover:bg-gray-200 rounded-lg text-gray-400 cursor-pointer">
                           <ChevronRight size={18} />
                         </button>
                       </div>
@@ -230,7 +230,7 @@ export const AddExpensePage = () => {
                   ) : (
                     <button
                       onClick={() => setIsAddingCategory(true)}
-                      className="w-12 h-12 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 hover:border-blue-500 hover:text-blue-500 transition-all hover:bg-blue-50"
+                      className="w-12 h-12 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center text-gray-400 hover:border-blue-500 hover:text-blue-500 transition-all hover:bg-blue-50 cursor-pointer"
                     >
                       <Plus size={24} />
                     </button>
@@ -241,7 +241,7 @@ export const AddExpensePage = () => {
                     <button
                       key={cat.id}
                       onClick={() => setCategory(cat.name)}
-                      className={`h-12 px-6 rounded-xl font-medium text-sm transition-all shadow-sm ${
+                      className={`h-12 px-6 rounded-xl font-medium text-sm transition-all shadow-sm cursor-pointer ${
                         category === cat.name
                           ? "bg-blue-600 text-white shadow-blue-500/30 scale-105"
                           : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300"
@@ -267,7 +267,7 @@ export const AddExpensePage = () => {
             {/* Save Button */}
             <Button
               onClick={handleSave}
-              className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-lg font-semibold shadow-xl shadow-gray-400/50"
+              className="w-full h-14 bg-[#0eb31c] hover:bg-[#0c9616] text-white rounded-2xl text-lg font-semibold shadow-xl shadow-green-500/30 transition-all duration-300 transform hover:scale-[1.02]"
             >
               Save Expense
             </Button>

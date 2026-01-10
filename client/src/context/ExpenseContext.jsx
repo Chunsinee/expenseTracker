@@ -35,8 +35,8 @@ export const ExpenseProvider = ({ children }) => {
 
       setExpenses(formattedExpenses);
       setCategories(catRes.data);
-    } catch {
-      console.log("Failed to fetch data");
+    } catch (err) {
+      console.error("Failed to fetch data", err);
     }
   }, []);
 
@@ -67,8 +67,9 @@ export const ExpenseProvider = ({ children }) => {
       });
 
       fetchData();
-    } catch {
-      console.log("Failed to add expense");
+    } catch (err) {
+      console.error("Failed to add expense", err);
+      alert("Error adding expense. Please try again.");
     }
   };
 

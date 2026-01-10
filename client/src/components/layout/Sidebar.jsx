@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { LayoutDashboard, Wallet, LogOut } from "lucide-react";
+import { LayoutDashboard, Wallet, LogOut, PieChart } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 const NAV_ITEMS = [
@@ -14,8 +14,15 @@ export const Sidebar = () => {
 
   return (
     <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-gray-100 h-screen fixed left-0 top-0 z-50">
-      <div className="h-16 flex items-center px-8 border-b border-gray-100">
-        <h1 className="text-2xl font-bold text-primary">CashFlow</h1>
+      <div className="h-24 flex items-center justify-center shadow-sm relative z-10">
+        <Link to="/dashboard" className="flex items-center">
+          <span className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 to-blue-900 bg-clip-text text-transparent font-['Cabin']">
+            Cash
+          </span>
+          <span className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent font-['Cabin']">
+            Flow
+          </span>
+        </Link>
       </div>
 
       <nav className="flex-1 py-8 px-4 space-y-2">
@@ -44,7 +51,7 @@ export const Sidebar = () => {
             logout();
             navigate("/login");
           }}
-          className="flex items-center gap-3 w-full px-4 py-3 text-sm font-medium text-red-500 hover:bg-red-50 rounded-2xl transition-colors"
+          className="flex items-center gap-3 w-full px-4 py-3 text-sm font-medium text-red-500 hover:bg-red-50 rounded-2xl transition-colors cursor-pointer"
         >
           <LogOut size={20} />
           Logout
