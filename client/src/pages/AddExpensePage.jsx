@@ -267,7 +267,7 @@ export const AddExpensePage = () => {
             {/* Save Button */}
             <Button
               onClick={handleSave}
-              className="w-full h-14 bg-gray-900 text-white hover:bg-black rounded-2xl text-lg font-semibold shadow-xl"
+              className="w-full h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-lg font-semibold shadow-xl shadow-gray-400/50"
             >
               Save Expense
             </Button>
