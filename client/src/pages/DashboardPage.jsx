@@ -52,24 +52,26 @@ const MONTH_NAMES = [
 
 export const DashboardPage = () => {
   const { expenses } = useExpenses();
-  const [filterMonth, setFilterMonth] = useState(
-    new Date().toISOString().slice(0, 7)
-  ); // Default: YYYY-MM
+  const currentYear = new Date().getFullYear();
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth()); // 0-11
 
-  // Generate all 12 months (January to December)
-  const monthOptions = useMemo(() => {
-    const currentYear = new Date().getFullYear();
-    return MONTH_NAMES.map((name, index) => ({
-      value: `${currentYear}-${String(index + 1).padStart(2, "0")}`,
-      label: name,
-    }));
-  }, []);
+  // Max last 5 years
+  const yearOptions = useMemo(() => {
+    return Array.from({ length: 5 }, (_, i) => currentYear - i);
+  }, [currentYear]);
 
-  // Filter expenses by month
+  // Filter expenses by month and year
   const filteredExpenses = useMemo(() => {
-    if (!filterMonth) return expenses;
-    return expenses.filter((e) => e.date && e.date.startsWith(filterMonth));
-  }, [expenses, filterMonth]);
+    return expenses.filter((e) => {
+      if (!e.date) return false;
+      const date = new Date(e.date);
+      return (
+        date.getFullYear() === Number(selectedYear) &&
+        date.getMonth() === Number(selectedMonth)
+      );
+    });
+  }, [expenses, selectedYear, selectedMonth]);
 
   // Category Stats
   const categoryStats = useMemo(() => {
@@ -125,7 +127,7 @@ export const DashboardPage = () => {
       <div className="space-y-6">
         {/* Top Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column (2/3) */}
+          {/* Left Column */}
           <div className="lg:col-span-2 space-y-6">
             {/* Stats Row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -166,33 +168,54 @@ export const DashboardPage = () => {
 
             {/* Recent Expenses Table */}
             <Card>
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
                 <h3 className="text-xl font-bold text-gray-900">
                   Recent Expenses
                 </h3>
 
-                {/* Month Custom Dropdown */}
-                <div className="relative">
-                  <select
-                    value={filterMonth}
-                    onChange={(e) => setFilterMonth(e.target.value)}
-                    className="appearance-none bg-gray-50 hover:bg-gray-100 border border-transparent hover:border-gray-200 text-gray-700 font-medium text-sm py-2 pl-4 pr-10 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer transition-all"
-                  >
-                    {monthOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown
-                    size={16}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
-                  />
+                <div className="flex items-center gap-2">
+                  {/* Year Dropdown */}
+                  <div className="relative">
+                    <select
+                      value={selectedYear}
+                      onChange={(e) => setSelectedYear(e.target.value)}
+                      className="appearance-none bg-gray-50 hover:bg-gray-100 border border-transparent hover:border-gray-200 text-gray-700 font-medium text-sm py-2 pl-4 pr-10 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer transition-all"
+                    >
+                      {yearOptions.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      size={16}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+                    />
+                  </div>
+
+                  {/* Month Dropdown */}
+                  <div className="relative">
+                    <select
+                      value={selectedMonth}
+                      onChange={(e) => setSelectedMonth(e.target.value)}
+                      className="appearance-none bg-gray-50 hover:bg-gray-100 border border-transparent hover:border-gray-200 text-gray-700 font-medium text-sm py-2 pl-4 pr-10 rounded-xl outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer transition-all"
+                    >
+                      {MONTH_NAMES.map((name, index) => (
+                        <option key={index} value={index}>
+                          {name}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      size={16}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"
+                    />
+                  </div>
                 </div>
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-left">
+                <table className="w-full text-left min-w-[600px]">
                   <thead>
                     <tr className="text-gray-500 text-xs uppercase tracking-wider border-b border-gray-100">
                       <th className="pb-4 font-medium pl-4">Date</th>
@@ -243,7 +266,7 @@ export const DashboardPage = () => {
                           colSpan="4"
                           className="py-8 text-center text-gray-400"
                         >
-                          No expenses found for this month
+                          No expenses found for this period
                         </td>
                       </tr>
                     )}
@@ -253,7 +276,7 @@ export const DashboardPage = () => {
             </Card>
           </div>
 
-          {/* Right Column (1/3) */}
+          {/* Right Column */}
           <div className="lg:col-span-1 space-y-6">
             {/* Expense Distribution */}
             <Card>

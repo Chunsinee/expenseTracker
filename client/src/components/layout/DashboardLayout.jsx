@@ -1,24 +1,32 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Sidebar } from "./Sidebar";
 import { User, Bell, Menu } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
 export const DashboardLayout = ({ children, title = "Overview" }) => {
   const { user } = useAuth();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex bg-gray-50">
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
       <div className="flex-1 flex flex-col min-w-0 lg:ml-64">
         {/* Mobile Header */}
         <header className="lg:hidden bg-white border-b border-gray-100 p-4 flex items-center justify-between sticky top-0 z-20">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-primary rounded-lg">
-              <User size={18} className="text-white" />
-            </div>
-            <span className="font-bold text-gray-900">CashFlow</span>
-          </div>
-          <button className="p-2 text-gray-500 hover:bg-gray-100 rounded-full">
+          <Link to="/dashboard" className="flex items-center">
+            <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 to-blue-900 bg-clip-text text-transparent font-['Cabin']">
+              Cash
+            </span>
+            <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent font-['Cabin']">
+              Flow
+            </span>
+          </Link>
+          <button
+            className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"
+            onClick={() => setIsSidebarOpen(true)}
+          >
             <Menu size={24} />
           </button>
         </header>
