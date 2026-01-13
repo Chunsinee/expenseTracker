@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useExpenses } from "../context/ExpenseContext";
+// import { useExpenses } from "../context/ExpenseContext";
 import { useAuth } from "../context/AuthContext";
 import api from "../api/axios";
 import { User, Lock, Eye, EyeOff, Mail } from "lucide-react";
@@ -8,7 +8,7 @@ import { Button } from "../components/ui";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
-  const { fetchExpenses } = useExpenses();
+  // const { fetchExpenses } = useExpenses();
   const { login } = useAuth();
 
   const [isLogin, setIsLogin] = useState(true);
@@ -33,7 +33,7 @@ export const LoginPage = () => {
       if (isLogin) {
         // Login Success - Save token and user data
         login(response.data.token, response.data.user);
-        await fetchExpenses();
+        // แก้ await fetchExpenses();
         navigate("/dashboard");
       } else {
         // Register Success

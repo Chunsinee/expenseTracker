@@ -6,6 +6,7 @@ import {
   useCallback,
 } from "react";
 import api from "../api/axios";
+import { useAuth } from "./AuthContext";
 
 const ExpenseContext = createContext();
 
@@ -13,10 +14,35 @@ export const ExpenseProvider = ({ children }) => {
   const [expenses, setExpenses] = useState([]);
   const [categories, setCategories] = useState([]);
 
+  const { user } = useAuth();
+
+  /* 
+  // OLD: เปรียบเทียบกับ logic ใหม่
   const fetchData = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
+      // ... แก้  ...
+    }
+    // ...
+  }, []);
+  
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+  */
+
+  const fetchData = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      // OLD: if (!token) return; แก้ให้ set state ใหม่เผื่กรณีที่ข้อมูลเก่าจะค้างใน memo
+      // NEW: Clear data if token is missing
+      if (!token) {
+        setExpenses([]);
+        setCategories([]);
+        return;
+      }
 
       const [expRes, catRes] = await Promise.all([
         api.get("/expenses"),
@@ -40,9 +66,22 @@ export const ExpenseProvider = ({ children }) => {
     }
   }, []);
 
+  /* 
+  // OLD: ทำงานตอนเปิดเว็บครั้งแรก ซึ่งจะไม่ทำงานซ้ำแล้วทำให้ Login โหลดนานเพราะต้องสั่ง await fetchExpenses() เองก่อนให้โหลดข้อมูลแล้วค่อยเข้า
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+  */
+
+  // NEW: ทำงานเมื่อ user เปลี่ยน ไม่ได้ให้หน้าล็อคอินโหลดเอง จะโหลดทุกครั้งที่ user เปลี่ยน
+  useEffect(() => {
+    if (user) {
+      fetchData();
+    } else {
+      setExpenses([]);
+      setCategories([]);
+    }
+  }, [user, fetchData]);
 
   const addExpense = async (expense) => {
     try {
@@ -81,5 +120,5 @@ export const ExpenseProvider = ({ children }) => {
     </ExpenseContext.Provider>
   );
 };
-
+//ฟังชันดึงข้อมูลรายจ่าย
 export const useExpenses = () => useContext(ExpenseContext);
