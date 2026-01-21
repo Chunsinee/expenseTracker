@@ -2,28 +2,26 @@ import {
   createContext, // สร้าง Context สำหรับแชร์ข้อมูล (เช่น user info) ไปยังทุก Component
   useContext, // Hook สำหรับดึงข้อมูลจาก Context มาใช้งาน
   useState,
-  useEffect,
 } from "react";
 
 const AuthContext = createContext();
 
 // Provider for authentication state
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    // ดูใน Local Storage ของ Browser ว่ามี token กับ user เก็บไว้ไหม
-    const token = localStorage.getItem("token");
-    const userData = localStorage.getItem("user");
-
-    if (token && userData) {
-      try {
-        setUser(JSON.parse(userData)); // แปลงข้อมูล user จาก JSON string กลับเป็น Object
-      } catch {
-        localStorage.removeItem("user"); // ถ้าแปลงไม่ได้ ให้ลบข้อมูลทิ้ง
+  const [user, setUser] = useState(() => {
+    try {
+      const token = localStorage.getItem("token");
+      const userData = localStorage.getItem("user");
+      if (token && userData) {
+        return JSON.parse(userData); // ส่งค่า user -> obj ให้เอาค่าไปใช้ต่อได้
       }
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
     }
-  }, []); // <--- วงเล็บว่าง = ทำครั้งเดียวตอน component โหลดเสร็จ
+    return null; // user เป็น null
+  });
 
   const login = (token, userData) => {
     localStorage.setItem("token", token); // เก็บ token
@@ -38,7 +36,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    // ส่ง user, login, logout ผ่าน AuthContext ให้ลูกหลาน (children) ใช้
     <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>

@@ -34,10 +34,10 @@ export const ExpenseProvider = ({ children }) => {
 
   const fetchData = useCallback(async () => {
     try {
+      // Ensure async execution to prevent synchronous setState in useEffect
+      await Promise.resolve();
       const token = localStorage.getItem("token");
 
-      // OLD: if (!token) return; แก้ให้ set state ใหม่เผื่อกรณีที่ข้อมูลเก่าจะค้างใน memo
-      // NEW: Clear data if token is missing
       if (!token) {
         setExpenses([]);
         setCategories([]);
