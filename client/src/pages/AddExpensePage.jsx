@@ -10,11 +10,11 @@ import {
 } from "lucide-react";
 import { useExpenses } from "../context/ExpenseContext";
 
-const WEEK_DAYS = ["S", "M", "T", "W", "T", "F", "S"];
+const WEEK_DAYS = ["S", "M", "T", "W", "T", "F", "S"]; // ชื่อวันย่อไว้แสดงที่หัว calendar
 
 export const AddExpensePage = () => {
   const navigate = useNavigate();
-  const { addExpense, categories } = useExpenses();
+  const { addExpense, categories } = useExpenses(); // ดึงฟังก์ชันเพิ่มรายจ่าย+หมวดหมู่
 
   // Form State
   const [amount, setAmount] = useState("");
@@ -27,10 +27,11 @@ export const AddExpensePage = () => {
   // Initialize category
   useEffect(() => {
     if (categories.length > 0 && !category) {
-      setCategory(categories[0].name);
+      setCategory(categories[0].name); // category แรก .name = เอามาแค่ชื่อ
     }
   }, [categories, category]);
 
+  // User add category
   const handleAddCategory = () => {
     if (newCategoryName.trim()) {
       setCategory(newCategoryName);
@@ -39,12 +40,13 @@ export const AddExpensePage = () => {
     }
   };
 
+  // User save expense
   const handleSave = () => {
-    if (!amount) return;
+    if (!amount) return; // ถ้าไม่มีจำนวนเงิน -> ไม่ส่ง
 
     addExpense({
       title: note || category,
-      amount: parseFloat(amount),
+      amount: parseFloat(amount), // แปลงเป็น string to float
       category,
       date: new Date(date).toISOString(),
     });
@@ -54,20 +56,20 @@ export const AddExpensePage = () => {
 
   // Calendar Logic
   const currentMonth = new Date(date).toLocaleString("default", {
-    month: "long",
+    month: "long", // ชื่อเดือนเต็ม
     year: "numeric",
   });
 
   const daysInMonth = new Date(
     new Date(date).getFullYear(),
-    new Date(date).getMonth() + 1,
-    0
+    new Date(date).getMonth() + 1, // เดือนถัดไป
+    0 // วันที่ 0 = 0 ของเดือนหน้า = วันสุดท้ายของเดือนนี้
   ).getDate();
   const firstDayOfMonth = new Date(
     new Date(date).getFullYear(),
-    new Date(date).getMonth(),
+    new Date(date).getMonth(), // เดือนปัจจุบัน
     1
-  ).getDay();
+  ).getDay(); // 0 = อาทิตย์, 1 = จันทร์, ...
 
   const calendarDays = [];
   for (let i = 0; i < firstDayOfMonth; i++) calendarDays.push(null);
@@ -82,7 +84,7 @@ export const AddExpensePage = () => {
           <div className="space-y-6">
             {/* Top Section - Expense Info and Date in 2 columns */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Left: Expense Title & Amount (Dark Card) */}
+              {/* Left: Expense Title & Amount */}
               <Card className="p-6">
                 <div className="space-y-6">
                   {/* Expense Title */}
@@ -213,8 +215,8 @@ export const AddExpensePage = () => {
                       <input
                         value={newCategoryName}
                         onChange={(e) => setNewCategoryName(e.target.value)}
-                        onKeyDown={(e) =>
-                          e.key === "Enter" && handleAddCategory()
+                        onKeyDown={
+                          (e) => e.key === "Enter" && handleAddCategory() // ถ้ากด Enter = เพิ่ม category
                         }
                         placeholder="New..."
                         className="w-20 text-sm outline-none bg-transparent"
@@ -242,6 +244,7 @@ export const AddExpensePage = () => {
                       key={cat.id}
                       onClick={() => setCategory(cat.name)}
                       className={`h-12 px-6 rounded-xl font-medium text-sm transition-all shadow-sm cursor-pointer ${
+                        // เช็คว่า "หมวดที่เลือกอยู่" ตรงกับ "ปุ่มนี้" ไหม?
                         category === cat.name
                           ? "bg-blue-600 text-white shadow-blue-500/30 scale-105"
                           : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300"
@@ -251,7 +254,7 @@ export const AddExpensePage = () => {
                     </button>
                   ))}
 
-                  {/* Show temporary new category if selected but not in list yet */}
+                  {/* กรณีที่ User พิมพ์หมวดใหม่เอง (ยังไม่ได้บันทึกลง database) ให้แสดงปุ่มชั่วคราวขึ้นมาโชว์ก่อน */}
                   {category && !categories.some((c) => c.name === category) && (
                     <button
                       onClick={() => {}}

@@ -21,6 +21,7 @@ export const LoginPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    // [name]: value = อัปเดตเฉพาะช่องที่กำลังพิมพ์
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
   const handleSubmit = async (e) => {
@@ -36,7 +37,6 @@ export const LoginPage = () => {
         // แก้ await fetchExpenses();
         navigate("/dashboard");
       } else {
-        // Register Success
         alert("Registration Successful! Please Sign In.");
         setIsLogin(true);
         // Clear password after successful registration
@@ -45,7 +45,6 @@ export const LoginPage = () => {
     } catch (err) {
       console.error("Auth error:", err);
 
-      // Better error handling
       let message = "Authentication failed";
 
       if (err.response) {

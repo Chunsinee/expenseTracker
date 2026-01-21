@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo } from "react"; // useMemo = จำค่าผลลัพธ์การคำนวณ
 import { Wallet, Utensils, Car, CreditCard, ChevronDown } from "lucide-react";
 import { DashboardLayout } from "../components/layout/DashboardLayout";
 import { ExpenseChart } from "../components/dashboard/ExpenseChart";
@@ -32,7 +32,7 @@ const CATEGORY_CONFIG = {
 
 const getCategoryConfig = (category) => {
   const normalized = (category || "").toLowerCase();
-  return CATEGORY_CONFIG[normalized] || CATEGORY_CONFIG.default;
+  return CATEGORY_CONFIG[normalized] || CATEGORY_CONFIG.default; // ถ้าไม่เจอหมวดนี้ ให้ใช้ default
 };
 
 const MONTH_NAMES = [
@@ -54,17 +54,20 @@ export const DashboardPage = () => {
   const { expenses } = useExpenses();
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState(currentYear);
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth()); // 0-11
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
 
   // Max last 5 years
   const yearOptions = useMemo(() => {
-    return Array.from({ length: 5 }, (_, i) => currentYear - i);
+    // array.from = parameter 1 = object ที่มี length 5
+    // parameter 2 = function .map แบบย่อ
+    return Array.from({ length: 5 }, (_, i) => currentYear - i); // เอาปีปัจจุบันมาตั้ง ลบด้วยลำดับรอบ = [2026, 2025, 2024, 2023, 2022]
   }, [currentYear]);
 
-  // Filter expenses by month and year
+  // Filter expenses by month and year that user selected
   const filteredExpenses = useMemo(() => {
     return expenses.filter((e) => {
       if (!e.date) return false;
+      // convert string to date (ISO String format) ทำให้เข้าถึงค่าใน obj ได้
       const date = new Date(e.date);
       return (
         date.getFullYear() === Number(selectedYear) &&
@@ -76,6 +79,8 @@ export const DashboardPage = () => {
   // Category Stats
   const categoryStats = useMemo(() => {
     return filteredExpenses.reduce((acc, e) => {
+      // sample Accumulator = {food: 100, transport: 200, credit card: 300}
+      // ยอดเก่า + ยอดใหม่
       acc[e.category] = (acc[e.category] || 0) + toNumber(e.amount);
       return acc;
     }, {});
@@ -83,6 +88,8 @@ export const DashboardPage = () => {
 
   // Total Expense
   const totalExpense = useMemo(() => {
+    // Object.values(categoryStats) = [100, 200, 300]
+    // reduce((sum, value) => sum + value, 0) = 100 + 200 + 300 = 600
     return Object.values(categoryStats).reduce((sum, value) => sum + value, 0);
   }, [categoryStats]);
 
@@ -91,13 +98,13 @@ export const DashboardPage = () => {
     let maxName = "None";
     let maxValue = 0;
 
+    // obj -> array [name, value]
     Object.entries(categoryStats).forEach(([name, value]) => {
       if (value > maxValue) {
         maxValue = value;
         maxName = name;
       }
     });
-
     return { name: maxName, value: maxValue };
   }, [categoryStats]);
 
@@ -117,9 +124,12 @@ export const DashboardPage = () => {
 
   // Recent Expenses
   const recentExpenses = useMemo(() => {
-    return [...filteredExpenses]
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, 5);
+    return (
+      [...filteredExpenses]
+        // Date เก็บค่าเป็น ms ถ้าโดน +-
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 5)
+    );
   }, [filteredExpenses]);
 
   return (
@@ -239,7 +249,7 @@ export const DashboardPage = () => {
                                   month: "short",
                                   day: "numeric",
                                   year: "numeric",
-                                }
+                                },
                               )}
                             </td>
                             <td className="py-4 font-bold text-gray-900">

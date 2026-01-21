@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "axios"; // Library ของ JavaScript ใช้ส่ง HTTP Request
 
 // Axios instance with interceptor
 const api = axios.create({
@@ -10,10 +10,11 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  if (token) config.headers.Authorization = `Bearer ${token}`; // Add token to headers อ่านต่อที่บรรทัดที่ 8 ใน authMiddleware.js
   return config;
 });
 
+// ดักจับ Error ที่ตอบกลับมาจาก Server
 api.interceptors.response.use(
   (res) => res,
   (err) => {
