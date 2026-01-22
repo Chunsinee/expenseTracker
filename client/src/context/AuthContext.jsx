@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
     }
-    return null; // user เป็น null
+    return null;
   });
 
   const login = (token, userData) => {

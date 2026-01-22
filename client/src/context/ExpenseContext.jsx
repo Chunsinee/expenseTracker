@@ -131,7 +131,7 @@ export const ExpenseProvider = ({ children }) => {
         expenses,
         categories,
         addExpense,
-        fetchExpenses: fetchData, // ส่งฟังก์ชัน fetchData ออกไปในชื่อ "fetchExpenses"
+        fetchExpenses: fetchData,
       }}
     >
       {children}

@@ -19,7 +19,15 @@ export const AddExpensePage = () => {
   // Form State
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
-  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+
+  const [date, setDate] = useState(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  });
+
   const [note, setNote] = useState("");
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -46,7 +54,7 @@ export const AddExpensePage = () => {
 
     addExpense({
       title: note || category,
-      amount: parseFloat(amount), // แปลงเป็น string to float
+      amount: parseFloat(amount),
       category,
       date: new Date(date).toISOString(),
     });
@@ -54,22 +62,19 @@ export const AddExpensePage = () => {
     navigate("/dashboard");
   };
 
-  // Calendar Logic
-  const currentMonth = new Date(date).toLocaleString("default", {
+  const [y, m] = date.split("-").map(Number);
+  const year = y;
+  const monthIdx = m - 1; // 0-indexed
+
+  const dateObj = new Date(year, monthIdx, 1);
+
+  const currentMonth = dateObj.toLocaleString("default", {
     month: "long", // ชื่อเดือนเต็ม
     year: "numeric",
   });
 
-  const daysInMonth = new Date(
-    new Date(date).getFullYear(),
-    new Date(date).getMonth() + 1, // เดือนถัดไป
-    0 // วันที่ 0 = 0 ของเดือนหน้า = วันสุดท้ายของเดือนนี้
-  ).getDate();
-  const firstDayOfMonth = new Date(
-    new Date(date).getFullYear(),
-    new Date(date).getMonth(), // เดือนปัจจุบัน
-    1
-  ).getDay(); // 0 = อาทิตย์, 1 = จันทร์, ...
+  const daysInMonth = new Date(year, monthIdx + 1, 0).getDate();
+  const firstDayOfMonth = new Date(year, monthIdx, 1).getDay(); // 0 = อาทิตย์, 1 = จันทร์, ...
 
   const calendarDays = [];
   for (let i = 0; i < firstDayOfMonth; i++) calendarDays.push(null);

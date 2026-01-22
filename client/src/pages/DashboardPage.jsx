@@ -143,7 +143,7 @@ export const DashboardPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Total Spending Card */}
               <Card className="relative overflow-hidden">
-                <div className="relative z-10 flex flex-col h-full min-h-[100px]">
+                <div className="relative z-10 flex flex-col h-full min-h-25">
                   <p className="text-gray-500 text-sm font-medium mb-1 uppercase tracking-wider">
                     Total Spending ( Monthly )
                   </p>
@@ -225,7 +225,7 @@ export const DashboardPage = () => {
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-left min-w-[600px]">
+                <table className="w-full text-left min-w-150">
                   <thead>
                     <tr className="text-gray-500 text-xs uppercase tracking-wider border-b border-gray-100">
                       <th className="pb-4 font-medium pl-4">Date</th>
