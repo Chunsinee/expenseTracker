@@ -10,7 +10,7 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
-  if (token) config.headers.Authorization = `Bearer ${token}`; // Add token to headers อ่านต่อที่บรรทัดที่ 8 ใน authMiddleware.js
+  if (token) config.headers.Authorization = `Bearer ${token}`; // Add token to headers เชื่อมกับ L8 ใน authMiddleware.js
   return config;
 });
 

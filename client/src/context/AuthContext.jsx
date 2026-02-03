@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
   const login = (token, userData) => {
     localStorage.setItem("token", token); // เก็บ token
     localStorage.setItem("user", JSON.stringify(userData)); // เก็บ user
-    setUser(userData); // อัปเดต state
+    setUser(userData);
   };
 
   const logout = () => {

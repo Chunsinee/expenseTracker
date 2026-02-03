@@ -63,7 +63,6 @@ export const DashboardPage = () => {
     return Array.from({ length: 5 }, (_, i) => currentYear - i); // เอาปีปัจจุบันมาตั้ง ลบด้วยลำดับรอบ = [2026, 2025, 2024, 2023, 2022]
   }, [currentYear]);
 
-  // Filter expenses by month and year that user selected
   const filteredExpenses = useMemo(() => {
     return expenses.filter((e) => {
       if (!e.date) return false;

@@ -13,7 +13,7 @@ A full-stack web application for tracking personal expenses. This application al
 
 ## Tech Stack
 
-- **Frontend:** React, Tailwind CSS, Recharts, Lucide React
+- **Frontend:** React, Vite, Tailwind CSS, Framer Motion, Recharts, Lucide React
 - **Backend:** Node.js, Express, PostgreSQL (via Supabase)
 - **Authentication:** JSON Web Tokens (JWT), Bcrypt
 
